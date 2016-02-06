@@ -5,7 +5,6 @@ function getRandomIntInclusive(min, max) {
 
 $(document).ready(function(){
 
-
   var colorMap = ['rgba(0,0,0,0)',
                   'rgba(206,226,249, 0.25)',
                   'rgba(146,168,219, 0.3)',
@@ -15,7 +14,8 @@ $(document).ready(function(){
                   'rgba(189,33,188, 0.5)'];
 
 
-  d3.json('assets/us_grid.geo.json', function(error, grid_data){
+  // d3.json('assets/us_grid.geo.json', function(error, grid_data){
+  d3.json('assets/1.json', function(error, grid_data){
     if (error) throw error;
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiYmNsaWZ0b24iLCJhIjoicWNXT0Z6OCJ9.JvNO6GIbU8BZ-8LLSEwz2Q';
@@ -38,6 +38,11 @@ $(document).ready(function(){
 
     console.log(grid_data);
     // console.log(temp_grid);
+
+
+
+
+    
 
 
 
@@ -123,10 +128,29 @@ $(document).ready(function(){
               var current = d3.select(this);
               var c = parseInt(current.attr('i'));
               return colorMap[c];
-            })
+            });
       });
     });
 
-  });
+    var rowCount = 0;
 
+    $('#count').on('click', function(e){
+      d3.selectAll('path')
+        .each(function(){
+          d3.select(this)
+            .attr('fill', function(d){
+              var current = d3.select(this);
+              var fid = parseInt(current.attr('fid'));
+              // if (fid % 680 == 0){
+              if (fid % 85 == 0){
+                return  colorMap[5];
+              } else {
+                return colorMap[1];
+              }
+
+            });
+        });
+
+    });
+  });
 });
