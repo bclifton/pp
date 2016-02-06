@@ -28,14 +28,16 @@
         <nav class="navbar navbar-default">
       <div class="container-fluid navbar-fixed-top">
         <div class="navbar-header">
-          <h2 class="title">Bespoke Predictive Policing</h2>
+          <h2 class="title">Bespoke Predictive Policing - Create Your Own Crime Map</h2>
           <button type="button" class="btn btn-default navbar-btn" id="randomize">Totally Random</button>
-          <button type="button" class="btn btn-default navbar-btn" id="noise">Kinda Random</button>
+          <button type="button" class="btn btn-default navbar-btn" id="draw">Draw Your Own Hotspots</button>
+          <!-- <button type="button" class="btn btn-default navbar-btn" id="noise">Kinda Random</button> -->
           <!-- <button type="button" class="btn btn-default navbar-btn" id="count">Count</button> -->
           <div class="input-group navbar-btn right">
             <span class="input-group-addon" id="image">Upload Crime Threat Image:</span>
             <input type="file" class="form-control" aria-label="...">
           </div>
+          <button type="button" class="btn btn-default navbar-btn" id="clear">Clear</button>
 
 
           <!-- <img id="myImg" src="#" alt="your image" /> -->
@@ -45,8 +47,8 @@
 
 
     <div id="map"></div>
-    <canvas id="hidden-image" height="170" width="369"></canvas>
-    <img style="display:none;" />
+    <canvas id="hidden-canvas" height="170" width="369"></canvas>
+    <img style="display:none;" id="hidden-image"/>
 
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

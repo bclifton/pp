@@ -8,6 +8,9 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function map_range(value, low1, high1, low2, high2) {
+    return Math.floor(low2 + (high2 - low2) * (value - low1) / (high1 - low1));
+}
 
 // Dropzone.options.myAwesomeDropzone = {
 //   init: function() {
@@ -89,13 +92,7 @@ function getRandomIntInclusive(min, max) {
 
 $(document).ready(function(){
 
-  $(":file").change(function () {
-      if (this.files && this.files[0]) {
-          var reader = new FileReader();
-          reader.onload = imageIsLoaded;
-          reader.readAsDataURL(this.files[0]);
-      }
-  });
+
 
   var colorMap = ['rgba(0,0,0,0)',
                   'rgba(206,226,249, 0.25)',
@@ -114,7 +111,7 @@ $(document).ready(function(){
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v8',
         center: [-98.5795, 39.828175],
-        zoom: 3
+        zoom: 4
     });
 
     console.log(grid_data);
@@ -140,13 +137,7 @@ $(document).ready(function(){
       .attr('i', 0)
       .attr('fid', function(d){ return d.properties.FID; })
       .attr('x', function(d){ return d.properties.x})
-      .attr('y', function(d){ return d.properties.y})
-      .on('mouseover', function(d, i){
-        var current = d3.select(this);
-        var c = parseInt(current.attr('i'));
-        current.attr('fill', colorMap[c]);
-        current.attr('i', c >= 6 ? 6 : c += 1);
-      });
+      .attr('y', function(d){ return d.properties.y});
     function update() {
       featureElement.attr("d", path);
     }
@@ -185,12 +176,37 @@ $(document).ready(function(){
       // });
     // });
 
+    $('#draw').on('click', function(e){
+      var allPaths = d3.selectAll('path')
+        .on('mouseover', function(d, i){
+          var current = d3.select(this);
+          var c = parseInt(current.attr('i'));
+          current.attr('fill', colorMap[c]);
+          current.attr('i', c >= 6 ? 6 : c += 1);
+        });
+    });
+
+
 
     $('#randomize').on('click', function(e){
       var allPaths = d3.selectAll('path')
         .each(function(d){
           d3.select(this)
             .attr('i', getRandomIntInclusive(0,6))
+            .attr('fill', function(d){
+              var current = d3.select(this);
+              var c = parseInt(current.attr('i'));
+              return colorMap[c];
+            });
+      });
+    });
+
+
+    $('#clear').on('click', function(e){
+      var allPaths = d3.selectAll('path')
+        .each(function(d){
+          d3.select(this)
+            .attr('i', 0)
             .attr('fill', function(d){
               var current = d3.select(this);
               var c = parseInt(current.attr('i'));
@@ -260,10 +276,46 @@ $(document).ready(function(){
     });
 
 
-
+    $(":file").change(function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
 
     function imageIsLoaded(e) {
-      getBase64Image(e.target.result);
+
+      $('#hidden-image').attr('src', e.target.result);
+
+      img = document.getElementById("hidden-image");
+			var canvas = document.getElementById("hidden-canvas");
+			var ctx = canvas.getContext("2d");
+
+      ctx.translate(0, canvas.height);
+      ctx.scale(1, -1);
+			// console.log(img.width);
+			// console.log(canvas.width);
+			ctx.drawImage(img ,0 ,0, img.width, img.height,
+								0, 0, canvas.width, canvas.height);
+
+			var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			var pix = imgd.data;
+
+			var counter = 0;
+
+			var grayscaleArray = new Array();
+
+			for (var x = 0; x < canvas.width * 4; x+=4) {
+				for (var y = 0; y < pix.length; y+= canvas.width*4) {
+					counter ++;
+          grayscale = (pix[x+y]+pix[x+y+1]+pix[x+y+2]) / 3 ;
+					grayscale = map_range(grayscale, 0, 255, 6, 0);
+					grayscaleArray.push(grayscale);
+				};
+			};
+
+			console.log(grayscaleArray);
 
       d3.selectAll('path')
         .each(function(){
@@ -271,11 +323,8 @@ $(document).ready(function(){
             .attr('fill', function(d){
               var current = d3.select(this);
               var fid = parseInt(current.attr('fid'));
-
-              return fid;
-              // var x = current.attr('x');
-              // var y = current.attr('y');
-
+              var grayscaleColor = grayscaleArray[fid]
+              return colorMap[grayscaleColor];
             });
         });
     };
