@@ -14,8 +14,7 @@ $(document).ready(function(){
                   'rgba(189,33,188, 0.5)'];
 
 
-  // d3.json('assets/us_grid.geo.json', function(error, grid_data){
-  d3.json('assets/1.json', function(error, grid_data){
+  d3.json('assets/us_grid_with_positions.geo.json', function(error, grid_data){
     if (error) throw error;
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiYmNsaWZ0b24iLCJhIjoicWNXT0Z6OCJ9.JvNO6GIbU8BZ-8LLSEwz2Q';
@@ -26,26 +25,14 @@ $(document).ready(function(){
         zoom: 4
     });
 
-    // turf.js vars:
-
-    // var temp_grid = grid_data.features.map(function(obj){
-    //   return {'type': 'Feature', 'features': obj};
-    // });
-
-    // grid_data.features.forEach(function(e){
-    //   e.style = { "fill":"red" }
-    // });
-
     console.log(grid_data);
-    // console.log(temp_grid);
 
+    var xCounter = 0;
+    var yCounter = 0;
 
-
-
-    
-
-
-
+    grid_data.features.forEach(function(e){
+      var fid = e.properties.FID;
+    });
 
     var container = map.getCanvasContainer();
     var svg = d3.select(container).append("svg");
@@ -60,20 +47,17 @@ $(document).ready(function(){
       .attr('fill', colorMap[0])
       .attr('i', 0)
       .attr('fid', function(d){ return d.properties.FID; })
+      .attr('x', function(d){ return d.properties.x})
+      .attr('y', function(d){ return d.properties.y})
       .on('mouseover', function(d, i){
         var current = d3.select(this);
         var c = parseInt(current.attr('i'));
         current.attr('fill', colorMap[c]);
         current.attr('i', c >= 6 ? 6 : c += 1);
-      })
-      ;
-
+      });
     function update() {
-      // console.log('updating');
       featureElement.attr("d", path);
     }
-
-    //
     map.on("viewreset", update)
     map.on("movestart", function(){
       svg.classed("hidden", true);
@@ -84,27 +68,18 @@ $(document).ready(function(){
     map.on("moveend", function(){
       update();
       svg.classed("hidden", false);
-    })
-
-
+    });
     update();
-
-
     function projectPoint(lon, lat) {
       var point = map.project(new mapboxgl.LngLat(lon, lat));
       this.stream.point(point.x, point.y);
     }
 
     // map.on('style.load', function(){
-
-
-
       // map.addSource('grid', {
       //     'type': 'geojson',
       //     'data': grid_data
       // });
-
-
       // map.addLayer({
       //   'id': 'route',
       //   'type': 'line',
