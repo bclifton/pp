@@ -26,14 +26,27 @@
 				for (var y = 0; y < pix.length; y+= canvas.width*4) {
 					counter ++;
 					// console.log((pix[x+y]+pix[x+y+1]+pix[x+y+2]) / 3);
-					grayscaleArray.push((pix[x+y]+pix[x+y+1]+pix[x+y+2]) / 3);
+
+					grayscale = (pix[x+y]+pix[x+y+1]+pix[x+y+2]) / 3 ;
+
+					grayscale = map_range(grayscale, 0, 255, 0, 6);
+
+					grayscaleArray.push(grayscale);
+					// grayscaleArray.push((pix[x+y]+pix[x+y+1]+pix[x+y+2]) / 3);
+
+					console.log(grayscale);
 				};
 			};
 
-			console.log(grayscaleArray);
+			// console.log(grayscaleArray);
 
 			// Draw the ImageData at the given (x,y) coordinates.
 			// ctx.putImageData(imgd, 0, 0);
+
+
+			function map_range(value, low1, high1, low2, high2) {
+			    return Math.floor(low2 + (high2 - low2) * (value - low1) / (high1 - low1));
+			}
 
 		};
 	</script>
