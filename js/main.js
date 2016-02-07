@@ -275,13 +275,15 @@ $(document).ready(function(){
         });
     });
 
+    // var imageCounter=0;
+
 
     $(":file").change(function () {
-        if (this.files && this.files[0]) {
+        // if (this.files && this.files[0]) {
             var reader = new FileReader();
             reader.onload = imageIsLoaded;
             reader.readAsDataURL(this.files[0]);
-        }
+        // }
     });
 
     function imageIsLoaded(e) {
@@ -292,12 +294,17 @@ $(document).ready(function(){
 			var canvas = document.getElementById("hidden-canvas");
 			var ctx = canvas.getContext("2d");
 
+      // ctx.setTransform();
+
       ctx.translate(0, canvas.height);
       ctx.scale(1, -1);
-			// console.log(img.width);
-			// console.log(canvas.width);
+
 			ctx.drawImage(img ,0 ,0, img.width, img.height,
 								0, 0, canvas.width, canvas.height);
+
+      // ctx.restore();
+
+      // ctx.scale(1,-1);
 
 			var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			var pix = imgd.data;
