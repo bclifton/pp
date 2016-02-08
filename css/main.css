@@ -10,14 +10,20 @@ body {
   bottom:0;
   width:100%;
 }
+#image {
+    background-color: white;
+}
+
 svg {
   position: absolute;
   width: 100%;
   height: 100%;
 }
+
 .hidden {
 	display: none;
 }
+
 path {
   cursor: crosshair;
 }
@@ -28,13 +34,8 @@ path {
   width: 500px;
 }
 
-#image {
-    background-color: white;
-}
-
 .title {
     font-size: 30px;
-    /*color: #1341F3;*/
     font-weight: 800;
     font-style: italic;
 }
