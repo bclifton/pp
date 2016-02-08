@@ -60,9 +60,6 @@ $(document).ready(function(){
     map.on("movestart", function(){
       svg.classed("hidden", true);
     });
-    map.on("rotate", function(){
-      // svg.classed("hidden", true);
-    });
     map.on("moveend", function(){
       update();
       svg.classed("hidden", false);
@@ -72,6 +69,8 @@ $(document).ready(function(){
       var point = map.project(new mapboxgl.LngLat(lon, lat));
       this.stream.point(point.x, point.y);
     }
+
+
 
     $('#draw').on('click', function(e){
       var allPaths = d3.selectAll('path')
@@ -148,13 +147,10 @@ $(document).ready(function(){
     //       // data[cell] += Math.max(0, (25 - value) * 8);
     //       // data[cell + 3] = 255; // alpha.
     //
-    //
     //     }
     //   }
     //
-    //
     //   console.log(valueMap);
-    //
     //
     //   d3.selectAll('path')
     //     .each(function(){
@@ -185,23 +181,11 @@ $(document).ready(function(){
 			var canvas = document.getElementById("hidden-canvas");
 			var ctx = canvas.getContext("2d");
 
-      // ctx.setTransform();
-
-      // ctx.translate(0, canvas.height);
-      // ctx.scale(1, -1);
-
 			ctx.drawImage(img ,0 ,0, img.width, img.height,
-								0, 0, canvas.width, canvas.height);
-
-      // ctx.restore();
-      // ctx.scale(1,-1);
+								    0, 0, canvas.width, canvas.height);
 
 			var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			var pix = imgd.data;
-
-      console.log(canvas.height);
-      console.log(canvas.width);
-      console.log(pix);
 
 			var counter = 0;
 			var grayscaleArray = new Array();
@@ -214,7 +198,6 @@ $(document).ready(function(){
 					grayscaleArray.push(grayscale);
 				};
 			};
-
 
       d3.selectAll('path')
         .each(function(){
